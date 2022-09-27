@@ -34,7 +34,7 @@ if(isset($_POST["submit"])){
      
     $save_data = $data;
    
-   file_put_contents('users.json',json_encode($data), LOCK_EX);
+//    file_put_contents('users.json',json_encode($data), LOCK_EX);
 
     if(!file_put_contents('users.json',json_encode($save_data,JSON_PRETTY_PRINT),LOCK_EX))
     {
@@ -75,7 +75,6 @@ if(isset($_POST["submit"])){
                 class="form-control"
                 id="name"
                 name="name"
-                value=""
                 placeholder="Name"
             />
             </div></br>

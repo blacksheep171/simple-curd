@@ -2,10 +2,9 @@
 if(file_exists('users.json'))
 {
 $json = file_get_contents('users.json');
-  
-// Decode the JSON file
+
 $users = json_decode($json);
-// Display data
+
     $message = "<h3 class='text-success'>JSON file data</h3>";
 }else{
 	 $message = "<h3 class='text-danger'>JSON file Not found</h3>";
@@ -29,7 +28,7 @@ $users = json_decode($json);
     <div>
         <div class="row">
             <div class="col-12">
-                <a href="add.php" class="btn btn-primary" >Add</a>
+                <a href="create.php" class="btn btn-success" >Add</a>
             </div>
             
         </div>
@@ -47,7 +46,7 @@ $users = json_decode($json);
                                 <th class = "email">email</th>
                                 <th class = "phone">phone</th>
                                 <th class = "website">website</th>
-                                <!-- <th class = "extension">extension</th> -->
+                                <th class = "Action">Action</th>
                             </tr>
                         </thead>
                         <tbody id="load_data">
@@ -59,6 +58,7 @@ $users = json_decode($json);
                                 <td><?=  $user->email ?></td>
                                 <td><?=  $user->phone ?></td>
                                 <td><?=  $user->website ?></td>
+                                <td><a class = "btn btn-primary" href="update.php?id=<?=  $user->id ?>">Edit</a>&nbsp;<a class = "btn btn-danger" href="delete.php?id=<?=  $user->id ?>">Delete</a></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
