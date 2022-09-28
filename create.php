@@ -1,53 +1,3 @@
-<?php
-
-$message =  "";
-$error = "";
-if(isset($_POST["submit"])){
-    if(empty($_POST["name"])) {
-        $error = "<label class='text-danger'>Enter Name</label>";
-    } else if(empty($_POST["username"])) {
-        $error = "<label class='text-danger'>Enter username</label>";
-    } else if(empty($_POST["email"])) {
-        $error = "<label class='text-danger'>Enter email</label>";
-    } else if(empty($_POST["phone"])) {
-        $error = "<label class='text-danger'>Enter phone</label>";
-    } else if(empty($_POST["website"])) {
-        $error = "<label class='text-danger'>Enter website</label>";
-    }
-} else if(file_exists("users.json")) {
-    
-    $file = file_get_contents("users.json");
-    $data = json_decode($file, true);
-
-    // Get last id
-    $last_item    = end($data);
-    $last_item_id = $last_item['id'];
-    $new_record= array(
-        'id' => ++$last_item_id,
-        'name' => $_POST["name"],
-        'username' => $_POST["username"],
-        'email' => $_POST["email"],
-        'phone' => $_POST["phone"],
-        'website' => $_POST["website"],
-    );
-    array_push($data,$new_record);
-     
-    $save_data = $data;
-   
-//    file_put_contents('users.json',json_encode($data), LOCK_EX);
-
-    if(!file_put_contents('users.json',json_encode($save_data,JSON_PRETTY_PRINT),LOCK_EX))
-    {
-    echo "<h3 class='text-success'>Can not create</h3>";
-    } else {
-    echo "<h3 class='text-danger'>Create Successfully</h3>";
-    }
-} else {
-    $error = "JSON files does not exists";
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,9 +8,10 @@ if(isset($_POST["submit"])){
     <title>Simple CURD</title>
 </head>
 <body>
-<div class="container" style="width:500px;">
-     <h4 >Create New User</h4><br />
-     <a href="index.php" class="btn btn-dark">Back</a>
+<div class="container">
+    <h1 class="page-header text-center">Create Users</h1>
+    <div class="col-1"></div>
+    <div class="col-8"><a href="index.php">Back</a>
 </br>
      <form action="" method="POST">
             <?php if(isset($error))
@@ -122,7 +73,7 @@ if(isset($_POST["submit"])){
             />
             </div></br>
         <div>
-        <button type="submit" class="btn btn-success">Submit</button>
+        <input type="submit" name="save" value="Save" class="btn btn-primary">
         <?php if(isset($message))
         {
             echo $message;
@@ -130,8 +81,35 @@ if(isset($_POST["submit"])){
         ?>
       </form>
         </br>
-      
 </div>
+<?php
+ // Get last id
+ 
+     if(isset($_POST['save'])){
+        //open the json file
+        $data = file_get_contents('users.json');
+        $data = json_decode($data);
+        $last_item    = end($data);
+        $last_item_id = $last_item->id;
+        //data in out POST
+        $input = array(
+            'id' => ++$last_item_id,
+            'name' => $_POST['name'],
+            'username' => $_POST['username'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'website' => $_POST['website']
+        );
+ 
+        //append the input to our array
+        $data[] = $input;
+        //encode back to json
+        $data = json_encode($data, JSON_PRETTY_PRINT);
+        file_put_contents('users.json', $data);
+ 
+        header('location: index.php');
+    }
+?>
 </body>
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

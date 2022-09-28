@@ -1,28 +1,3 @@
-<?php
-if(isset($_GET["id"])) {
-    $id = $_GET["id"];
-}
-print_r($id);
-$json = file_get_contents('users.json');
-
-$users = json_decode($json);
-// convert std class to array
-
-// echo "<pre>";
-// var_dump($users);
-// echo "</pre>";
-// foreach ($users as $key => $value) {
-//     echo  $value[$key]. "<br/>";
-// }
-// var_dump($users[$id]);
-// foreach ($users as $key => $user) {
-//     if ($user['id']->id == $id ) {
-//        var_dump($user[$key]['name']);
-//     //    die();
-//     }
-// }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,16 +8,45 @@ $users = json_decode($json);
     <title>Simple CURD</title>
 </head>
 <body>
-<div class="container" style="width:500px;">
-     <h4 >Edit User</h4><br />
-     <a href="index.php" class="btn btn-dark">Back</a>
+<?php
+    //get id from URL
+    if(isset($_GET["index_id"])) {
+        $index_id = $_GET["index_id"];
+    }
+ 
+    //get json data
+    $data = file_get_contents('users.json');
+    $data_array = json_decode($data);
+ 
+    //assign the data to selected index
+    $row = $data_array[$index_id];
+ 
+    if(isset($_POST['save'])){
+        $input = array(
+            'id' => $row->id,
+            'name' => $_POST['name'],
+            'username' => $_POST['username'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'website' => $_POST['website']
+        );
+ 
+        //update the selected index
+        $data_array[$index_id] = $input;
+ 
+        //encode back to json
+        $data = json_encode($data_array, JSON_PRETTY_PRINT);
+        file_put_contents('users.json', $data);
+ 
+        header('location: index.php');
+    }
+?>
+<div class="container">
+    <h1 class="page-header text-center">Edit Users</h1>
+    <div class="col-1"></div>
+    <div class="col-8"><a href="index.php">Back</a>
 </br>
-     <form action="" method="POST">
-            <?php if(isset($error))
-            {
-            echo $error;  
-            }
-            ?>
+    <form action="" method="POST">
             <div id="name-group" class="form-group">
             <label for="name">Name</label>
             <input
@@ -50,7 +54,7 @@ $users = json_decode($json);
                 class="form-control"
                 id="name"
                 name="name"
-                value="<?= $users[$key]->name ?>"
+                value="<?php echo $row->name; ?>"
                 placeholder="Name"
             />
             </div></br>
@@ -61,6 +65,7 @@ $users = json_decode($json);
                 class="form-control"
                 id="username"
                 name="username"
+                value="<?php echo $row->username; ?>"
                 placeholder="User Name"
             />
             </div></br>
@@ -72,6 +77,7 @@ $users = json_decode($json);
                 class="form-control"
                 id="email"
                 name="email"
+                value="<?php echo $row->email; ?>"
                 placeholder="email@example.com"
             />
             </div></br>
@@ -83,6 +89,7 @@ $users = json_decode($json);
                 class="form-control"
                 id="phone"
                 name="phone"
+                value="<?php echo $row->phone; ?>"
                 placeholder="Please enter your phone number"
             />
             </div></br>
@@ -94,19 +101,14 @@ $users = json_decode($json);
                 class="form-control"
                 id="website"
                 name="website"
+                value="<?php echo $row->website; ?>"
                 placeholder="Please enter your website"
             />
             </div></br>
         <div>
-        <button type="submit" class="btn btn-success">Submit</button>
-        <?php if(isset($message))
-        {
-            echo $message;
-        }
-        ?>
-      </form>
+        <input type="submit" name="save" value="Save" class="btn btn-primary">
+    </form>
         </br>
-      
 </div>
 </body>
 </html>

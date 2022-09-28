@@ -1,15 +1,3 @@
-<?php
-if(file_exists('users.json'))
-{
-$json = file_get_contents('users.json');
-
-$users = json_decode($json);
-
-    $message = "<h3 class='text-success'>JSON file data</h3>";
-}else{
-	 $message = "<h3 class='text-danger'>JSON file Not found</h3>";
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +11,7 @@ $users = json_decode($json);
 
     <div class="container">
     <div class="row">
-        <div class="title"><h1>Simple CURD</h1></div>
+        <div class="title"><h1 class="page-header text-center">Simple CURD</h1></div>
     </div>
     <div>
         <div class="row">
@@ -37,7 +25,7 @@ $users = json_decode($json);
 
     <div class ="row show_data">
             <div class="col-12">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
                                 <th class = "id">ID</th>
@@ -50,17 +38,32 @@ $users = json_decode($json);
                             </tr>
                         </thead>
                         <tbody id="load_data">
-                            <?php foreach($users as $user) : ?>
-                            <tr>   
-                                <td><?=  $user->id ?></td>
-                                <td><?=  $user->name ?></td>
-                                <td><?=  $user->username ?></td>
-                                <td><?=  $user->email ?></td>
-                                <td><?=  $user->phone ?></td>
-                                <td><?=  $user->website ?></td>
-                                <td><a class = "btn btn-primary" href="update.php?id=<?=  $user->id ?>">Edit</a>&nbsp;<a class = "btn btn-danger" href="delete.php?id=<?=  $user->id ?>">Delete</a></td>
-                            </tr>
-                            <?php endforeach; ?>
+                        <?php
+                        //fetch data from json
+                        $data = file_get_contents('users.json');
+                        //decode into php array
+                        $data = json_decode($data);
+ 
+                        $index_id = 0;
+                        foreach($data as $row){
+                            echo "
+                                <tr>
+                                    <td>".$row->id."</td>
+                                    <td>".$row->name."</td>
+                                    <td>".$row->username."</td>
+                                    <td>".$row->email."</td>
+                                    <td>".$row->phone."</td>
+                                    <td>".$row->website."</td>
+                                    <td>
+                                        <a href='update.php?index_id=".$index_id."' class='btn btn-primary btn-sm'>Edit</a>
+                                        <a href='delete.php?index_id=".$index_id."' class='btn btn-danger btn-sm'>Delete</a>
+                                    </td>
+                                </tr>
+                            ";
+ 
+                            $index_id++;
+                        }
+                    ?>
                         </tbody>
                 </table>
             </div>
