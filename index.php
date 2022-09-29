@@ -29,11 +29,12 @@
                         <thead class="table-dark">
                             <tr>
                                 <th class = "id">ID</th>
-                                <th class ="name">name</th>
-                                <th class = "username">username</th>
-                                <th class = "email">email</th>
-                                <th class = "phone">phone</th>
-                                <th class = "website">website</th>
+                                <th class ="name">Name</th>
+                                <th class = "username">Username</th>
+                                <th class = "email">Email</th>
+                                <th class = "phone">Phone</th>
+                                <th class = "website">Website</th>
+                                <th class = "website">Image</th>
                                 <th class = "Action">Action</th>
                             </tr>
                         </thead>
@@ -44,8 +45,15 @@
                         //decode into php array
                         $data = json_decode($data);
  
-                        $index_id = 0;
+                       
                         foreach($data as $row){
+                               $img_url = isset($row->image) ? $row->image : null;
+                               if(isset($img_url)){
+                                $path = "./uploads/".$img_url;
+                                $img = "<img src='$path' style = 'width:140px; height: 100px'/>";
+                               } else {
+                                    $img = null;
+                               };
                             echo "
                                 <tr>
                                     <td>".$row->id."</td>
@@ -54,14 +62,13 @@
                                     <td>".$row->email."</td>
                                     <td>".$row->phone."</td>
                                     <td>".$row->website."</td>
+                                    <td>".$img."</td>
                                     <td>
-                                        <a href='update.php?index_id=".$index_id."' class='btn btn-primary btn-sm'>Edit</a>
-                                        <a href='delete.php?index_id=".$index_id."' class='btn btn-danger btn-sm'>Delete</a>
+                                        <a href='update.php?index_id=".$row->id."' class='btn btn-primary btn-sm'>Edit</a>
+                                        <a href='delete.php?index_id=".$row->id."' class='btn btn-danger btn-sm'>Delete</a>
                                     </td>
                                 </tr>
                             ";
- 
-                            $index_id++;
                         }
                     ?>
                         </tbody>
